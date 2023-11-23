@@ -16,6 +16,13 @@ cd snake_game/www
 npm run dev
 ``
 
+## notes
+we need to compile Rust to WebAssemblu code.
+WebAssembly can be excuted in the brower.
+it runs at native speed.
+3d apps, cad, virtual reality, system application, games.
+
+## 
 
 
 

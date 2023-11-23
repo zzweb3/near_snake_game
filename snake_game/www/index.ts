@@ -3,8 +3,11 @@ import { rnd } from "./utils/rnd"
 
 //init() 页面加载时被调用
 init().then(wasm => {
+    //
+    var fps = 5;
+    //
     const CELL_SIZE = 20;   //单元格大小 10个像素
-    const WORLD_WIDTH = 20;
+    const WORLD_WIDTH = 10;
     const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);
 
     const world = World.new(WORLD_WIDTH, snakeSpawnIdx);
@@ -93,7 +96,6 @@ init().then(wasm => {
         //filter out duplicates
         //revers array
 
-
         snakeCells
             .slice()
             //.filter((cellIdx, i) => !(i > 0 && cellIdx === snakeCells[0]))
@@ -124,6 +126,7 @@ init().then(wasm => {
     }
 
     function paint() {
+        console.log("刷新频率");
         drawWorld();
         drawSnake();
         drawReward();
@@ -137,7 +140,7 @@ init().then(wasm => {
             return;
         }
 
-        const fps = 5;
+        //const fps = 5;
         //console.log("刷新时间：" + 1000 / fps);
         setTimeout(() => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
