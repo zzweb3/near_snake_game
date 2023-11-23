@@ -13,9 +13,9 @@
 2. www 目录下 安装 webpack webpack-cli webpack-dev-server 
 cd www
 npm install --save webpack webpack-cli 
- npm install --save-dev webpack-dev-server
+npm install --save-dev webpack-dev-server
 
-3. www 目录下 安装 
+3.  
 
 ```
 ## 操作
@@ -31,6 +31,7 @@ wasm-pack build --target web
 终端窗口2:
 cd snake_game/www
 npm run dev
+npm run build //构建
 ```
 
 ## notes

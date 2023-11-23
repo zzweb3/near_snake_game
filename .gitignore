@@ -19,3 +19,6 @@ target
 
 # node_modules
 snake_game/www/node_modules/
+
+# public
+snake_game/www/public/
