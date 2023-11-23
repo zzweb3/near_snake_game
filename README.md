@@ -32,6 +32,10 @@ wasm-pack build --target web
 cd snake_game/www
 npm run dev
 npm run build //构建
+
+访问：
+http://localhost:8080
+http://localhost:8080/webpack-dev-server
 ```
 
 ## notes
