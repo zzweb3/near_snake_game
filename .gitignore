@@ -18,4 +18,4 @@ target
 */*/*/*/target
 
 # node_modules
-*/node_modules
+snake_game/www/node_modules/
