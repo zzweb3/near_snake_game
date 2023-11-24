@@ -181,8 +181,6 @@ impl World {
             },
             _ => {}
         }
-
-        
     }
 
     fn gen_next_snake_cell(&self, direction: &Direction) -> SnakeCell{

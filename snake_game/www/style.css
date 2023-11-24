@@ -26,6 +26,7 @@
     #border-color:pink;
     border-color:#98bf21;
     border-width:8px;
+    background-color: lightgray;
 }
 .button {
     background-color: #4CAF50; /* Green */

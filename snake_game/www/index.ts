@@ -3,10 +3,7 @@ import { rnd } from "./utils/rnd"
 
 //init() 页面加载时被调用
 init().then(wasm => {
-    //
-    var fps = 5;
-    //
-    const CELL_SIZE = 20;   //单元格大小 10个像素
+    const CELL_SIZE = 30;   //单元格大小 10个像素
     const WORLD_WIDTH = 20;
     const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);   //蛇头
 
@@ -39,14 +36,14 @@ init().then(wasm => {
             case "ArrowUp":
                 world.change_snake_dir(Direction.Up);
                 break;
-                case "ArrowRight":
-                    world.change_snake_dir(Direction.Right);
-                    break;
-                case "ArrowDown":
-                    world.change_snake_dir(Direction.Down);
-                    break;
-                case "ArrowLeft":
-                    world.change_snake_dir(Direction.Left);
+            case "ArrowRight":
+                world.change_snake_dir(Direction.Right);
+                break;
+            case "ArrowDown":
+                world.change_snake_dir(Direction.Down);
+                break;
+            case "ArrowLeft":
+                world.change_snake_dir(Direction.Left);
                 break;
         }
     });
@@ -140,6 +137,7 @@ init().then(wasm => {
             return;
         }
 
+        const fps = 5;    //每秒5帧
         setTimeout(() => {
             //清除画布
             ctx.clearRect(0, 0, canvas.width, canvas.height);
