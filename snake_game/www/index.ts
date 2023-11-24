@@ -1,4 +1,4 @@
-import init, { World, Direction, GameStatus } from "snake_game";
+import init, { World, Direction, GameStatus } from "snake_game";    //从pkg中导入
 import { rnd } from "./utils/rnd"
 
 //init() 页面加载时被调用
@@ -7,8 +7,8 @@ init().then(wasm => {
     var fps = 5;
     //
     const CELL_SIZE = 20;   //单元格大小 10个像素
-    const WORLD_WIDTH = 10;
-    const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);
+    const WORLD_WIDTH = 20;
+    const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);   //蛇头
 
     const world = World.new(WORLD_WIDTH, snakeSpawnIdx);
     const worldWidth = world.width();
@@ -53,18 +53,18 @@ init().then(wasm => {
 
     function drawWorld() {
         ctx.beginPath();
+        ctx.setLineDash([1, 3]);    //虚线
+        ctx.strokeStyle = '#808080';
 
         for(let x = 0; x < worldWidth + 1; x++) {
             ctx.moveTo(CELL_SIZE * x, 0);
             ctx.lineTo(CELL_SIZE * x, worldWidth * CELL_SIZE);
         }
-        
+
         for(let y = 0; y < worldWidth + 1; y++) {
             ctx.moveTo(0, CELL_SIZE * y);
             ctx.lineTo(worldWidth * CELL_SIZE, CELL_SIZE * y);
-
         }
-
         ctx.stroke();
     }
 
@@ -101,6 +101,7 @@ init().then(wasm => {
             //.filter((cellIdx, i) => !(i > 0 && cellIdx === snakeCells[0]))
             .reverse()
             .forEach((cellIdx, i) => {
+                //(x, y) 即 (col, row)
                 const col = cellIdx % worldWidth;
                 const row = Math.floor(cellIdx / worldWidth);
 
@@ -126,7 +127,6 @@ init().then(wasm => {
     }
 
     function paint() {
-        console.log("刷新频率");
         drawWorld();
         drawSnake();
         drawReward();
@@ -140,9 +140,8 @@ init().then(wasm => {
             return;
         }
 
-        //const fps = 5;
-        //console.log("刷新时间：" + 1000 / fps);
         setTimeout(() => {
+            //清除画布
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawWorld();
             world.step();

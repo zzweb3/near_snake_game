@@ -18,7 +18,11 @@ npm install --save-dev webpack-dev-server
 3.  
 
 ```
-## 操作
+## 安装依赖
+webpack 安装css
+https://www.robinwieruch.de/webpack-css/
+webpack 安装typescript
+https://webpack.js.org/guides/typescript/
 
 
 
@@ -26,12 +30,14 @@ npm install --save-dev webpack-dev-server
 ```shell
 终端窗口1:
 cd snake_game
-wasm-pack build --target web
+cargo install wasm-pack //安装wasm-pack
+wasm-pack build --target web  //编译生成wasm pkg, snake_game/pkg内容
 
 终端窗口2:
 cd snake_game/www
-npm run dev
+npm install //下载node_modules
 npm run build //构建
+npm run dev //启动服务
 
 访问：
 http://localhost:8080

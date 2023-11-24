@@ -1,4 +1,4 @@
-use  wasm_bindgen::prelude::*;
+use wasm_bindgen::prelude::*;
 use wee_alloc::WeeAlloc;
 
 extern crate web_sys;
@@ -64,7 +64,7 @@ pub struct World {
 #[wasm_bindgen]
 impl World {
     pub fn new(width: usize, snake_idx: usize) -> World {
-        let snake = Snake::new(snake_idx, 3);
+        let snake = Snake::new(snake_idx, 2);
         let size = width * width;
 
         World { 
@@ -104,6 +104,7 @@ impl World {
         self.size
     }
 
+    /* 蛇头 */
     pub fn snake_head_idx(&self) -> usize {
         self.snake.body[0].0
     }
