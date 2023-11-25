@@ -3,8 +3,9 @@ import { rnd } from "./utils/rnd";
 
 //init() 页面加载时被调用
 init().then(wasm => {
+    var fps = 3;    //初始时刻每秒5帧
     const CELL_SIZE = 30;   //单元格大小 10个像素
-    const WORLD_WIDTH = 15;
+    const WORLD_WIDTH = 20;
     const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);   //蛇头
 
     const world = World.new(WORLD_WIDTH, snakeSpawnIdx);
@@ -178,12 +179,14 @@ init().then(wasm => {
             return;
         }
 
-        const fps = 5;    //每秒5帧
         setTimeout(() => {
             //清除画布
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawWorld();
-            world.step();
+            //
+            if(world.step()) {
+                fps =fps+5;
+            }
             paint();
             //the method takes a callback to invoked before the next repaint
             requestAnimationFrame(play)

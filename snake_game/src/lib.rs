@@ -1,8 +1,6 @@
 use wasm_bindgen::prelude::*;
 use wee_alloc::WeeAlloc;
 
-use std::borrow::Borrow;
-
 extern crate web_sys;
 
 #[global_allocator]
@@ -157,7 +155,7 @@ impl World {
     }
 
 
-    pub fn step(&mut self) {
+    pub fn step(&mut self) -> Option<bool>{
         match self.status {
             Some(GameStatus::Played) => {
                 let temp = self.snake.body.clone();
@@ -178,7 +176,7 @@ impl World {
                 if self.snake.body[1..self.snake_length()].contains(&self.snake.body[0]) {
                     self.status = Some(GameStatus::Lost);
                 }
-
+                //TODO 当蛇头吃到奖励时
                 if self.reward_cell == Some(self.snake_head_idx()) {
                     if self.snake_length() < self.size() {
                         self.points += 1;
@@ -189,9 +187,13 @@ impl World {
                     }
 
                     self.snake.body.push(SnakeCell(self.snake.body[1].0));
+                    return Some(true);  //返回true，蛇没吃到一次奖励，就返回true，通知前端提速。
                 }
+               return None;
             },
-            _ => {}
+            _ => {
+                return None;
+            }
         }
     }
 
