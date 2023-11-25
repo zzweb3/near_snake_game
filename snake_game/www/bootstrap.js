@@ -7,4 +7,10 @@ import("./index")
 //引入css
 import './style.css';
 
-import './icon.png';
+import './images/icon.png';
+import './images/logo.png';
+import './images/head-up.png';
+import './images/head-right.png';
+import './images/head-down.png';
+import './images/head-left.png';
+import './images/body.png';

@@ -1,6 +1,8 @@
 use wasm_bindgen::prelude::*;
 use wee_alloc::WeeAlloc;
 
+use std::borrow::Borrow;
+
 extern crate web_sys;
 
 #[global_allocator]
@@ -40,7 +42,7 @@ impl Snake {
     fn new(spawn_index: usize, size: usize) -> Snake {
         let mut body = vec!();
         for i in 0..size {
-            body.push(SnakeCell(spawn_index - i));
+            body.push(SnakeCell(spawn_index - i));  //初始蛇头永远在最右侧
         }
 
         Snake {
@@ -64,7 +66,7 @@ pub struct World {
 #[wasm_bindgen]
 impl World {
     pub fn new(width: usize, snake_idx: usize) -> World {
-        let snake = Snake::new(snake_idx, 2);
+        let snake = Snake::new(snake_idx, 3);
         let size = width * width;
 
         World { 
@@ -145,6 +147,16 @@ impl World {
         self.snake.body.as_ptr()
     }
 
+    pub fn snake_dir(&self) -> Direction {
+        return match self.snake.direction {
+            Direction::Up => Direction::Up,
+            Direction::Right => Direction::Right,
+            Direction::Down => Direction::Down,
+            Direction::Left => Direction::Left,
+        }
+    }
+
+
     pub fn step(&mut self) {
         match self.status {
             Some(GameStatus::Played) => {
@@ -183,7 +195,7 @@ impl World {
         }
     }
 
-    fn gen_next_snake_cell(&self, direction: &Direction) -> SnakeCell{
+    fn gen_next_snake_cell(&self, direction: &Direction) -> SnakeCell {
         let snake_idx = self.snake_head_idx();
         let row = snake_idx / self.width;
 
@@ -228,6 +240,4 @@ impl World {
     }
 
 }
-
-
 //wasm-pack build --target web

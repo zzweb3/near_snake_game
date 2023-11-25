@@ -1,5 +1,5 @@
 import init, { World, Direction, GameStatus } from "snake_game";    //从pkg中导入
-import { rnd } from "./utils/rnd"
+import { rnd } from "./utils/rnd";
 
 //init() 页面加载时被调用
 init().then(wasm => {
@@ -34,15 +34,19 @@ init().then(wasm => {
     document.addEventListener("keydown", (e) => {
         switch(e.code) {
             case "ArrowUp":
+            case "KeyW":
                 world.change_snake_dir(Direction.Up);
                 break;
             case "ArrowRight":
+            case "KeyD":
                 world.change_snake_dir(Direction.Right);
                 break;
             case "ArrowDown":
+            case "KeyS":
                 world.change_snake_dir(Direction.Down);
                 break;
             case "ArrowLeft":
+            case "KeyA":
                 world.change_snake_dir(Direction.Left);
                 break;
         }
@@ -87,7 +91,7 @@ init().then(wasm => {
         const snakeCells = new Uint32Array(
             wasm.memory.buffer,
             world.snake_cells(),
-            world.snake_length()
+            world.snake_length(),
         );
 
         //filter out duplicates
@@ -102,17 +106,65 @@ init().then(wasm => {
                 const col = cellIdx % worldWidth;
                 const row = Math.floor(cellIdx / worldWidth);
 
-                //we are overriding snake head color by body when we crush
-                ctx.fillStyle = i === snakeCells.length - 1 ? "#7878db" : "#000000";
-
                 ctx.beginPath();
+                //we are overriding snake head color by body when we crush
+                // ctx.fillStyle = i === snakeCells.length - 1 ? "#7878db" : "#363636";
+                // ctx.fillRect(
+                //     col * CELL_SIZE,
+                //     row * CELL_SIZE,
+                //     CELL_SIZE,
+                //     CELL_SIZE
+                // );
 
-                ctx.fillRect(
-                    col * CELL_SIZE,
-                    row * CELL_SIZE,
-                    CELL_SIZE,
-                    CELL_SIZE
-                );
+                //绘制蛇图，蛇头，蛇身，蛇尾
+                if (i === snakeCells.length - 1) {  //蛇头
+                    var img = new Image();   // 创建一个<img>元素
+                    img.onload = function(){
+                        ctx.drawImage(img,
+                            col * CELL_SIZE,
+                            row * CELL_SIZE,
+                            CELL_SIZE,
+                            CELL_SIZE)//绘制图片
+                    }
+                    //
+                    const dir = world.snake_dir();
+                    if (Direction.Up.valueOf() === dir) {
+                        img.src = 'head-up.png'; // 设置图片源地址
+                    } else if (Direction.Right.valueOf() === dir) {
+                        img.src = 'head-right.png';
+                    } else if (Direction.Down.valueOf() === dir) {
+                        img.src = 'head-down.png';
+                    } else if (Direction.Left.valueOf() === dir) {
+                        img.src = 'head-left.png';
+                    }
+
+               } else if (i === 0) {    //蛇尾
+                    ctx.arc(col * CELL_SIZE + CELL_SIZE/2,row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE/3,0,2*Math.PI);//arc 的意思是“弧”
+                    ctx.fillStyle="#FF7256";
+                    ctx.fill();
+                    ctx.strokeStyle="blue";
+                    // var img = new Image();
+                    // img.onload = function(){
+                    //     ctx.drawImage(img,
+                    //         col * CELL_SIZE,
+                    //         row * CELL_SIZE,
+                    //         CELL_SIZE,
+                    //         CELL_SIZE)
+                    // }
+                    // img.src = 'tail.png';
+               } else { //蛇身
+                    // ctx.arc(col * CELL_SIZE + CELL_SIZE/2,row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE/2,0,2*Math.PI);//arc 的意思是“弧”
+                    // ctx.fillStyle="#FF6A6A";
+                    // ctx.fill();
+                    // ctx.strokeStyle="blue";
+                    ctx.fillStyle = "#FF6A6A";
+                    ctx.fillRect(
+                        col * CELL_SIZE,
+                        row * CELL_SIZE,
+                        CELL_SIZE,
+                        CELL_SIZE
+                    );
+                }
             });
 
         ctx.stroke();
