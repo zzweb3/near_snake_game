@@ -3,9 +3,9 @@ import { rnd } from "./utils/rnd";
 
 //init() 页面加载时被调用
 init().then(wasm => {
-    var fps = 3;    //初始时刻每秒5帧
+    let fps = 5;    //初始时刻每秒5帧
     const CELL_SIZE = 30;   //单元格大小 10个像素
-    const WORLD_WIDTH = 20;
+    const WORLD_WIDTH = 10;
     const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);   //蛇头
 
     const world = World.new(WORLD_WIDTH, snakeSpawnIdx);
@@ -92,14 +92,12 @@ init().then(wasm => {
             world.snake_cells(),
             world.snake_length(),
         );
-
-        //filter out duplicates
-        //revers array
+        console.log(snakeCells);
 
         snakeCells
-            .slice()
-            //.filter((cellIdx, i) => !(i > 0 && cellIdx === snakeCells[0]))
-            .reverse()
+            //.slice()
+            .filter((cellIdx, i) => !(i > 0 && cellIdx === snakeCells[0]))    //filter out duplicates 过滤重复项
+            //.reverse()  //revers array 反转数组
             .forEach((cellIdx, i) => {
                 //(x, y) 即 (col, row)
                 const col = cellIdx % worldWidth;
@@ -116,7 +114,8 @@ init().then(wasm => {
                 // );
 
                 //绘制蛇图，蛇头，蛇身，蛇尾
-                if (i === snakeCells.length - 1) {  //蛇头
+                //if (i === snakeCells.length - 1) {  //蛇头-反转
+                if (i === 0) {  //蛇头
                     var img = new Image();   // 创建一个<img>元素
                     img.onload = function(){
                         ctx.drawImage(img,
@@ -137,14 +136,46 @@ init().then(wasm => {
                         img.src = 'head-left.png';
                     }
 
-               } else if (i === 0 ) {    //蛇尾 需要特殊处理，比较复杂，暂不考虑
-                    ctx.fillStyle = "#AB85F5";
-                    ctx.fillRect(
-                        col * CELL_SIZE,
-                        row * CELL_SIZE,
-                        CELL_SIZE,
-                        CELL_SIZE
-                    );
+               //} else if (i === 0 ) {    //蛇尾 需要特殊处理，比较复杂，暂不考虑
+                } else if (i === snakeCells.length - 1) {    //蛇尾 需要特殊处理，比较复杂，暂不考虑
+                    // ctx.fillStyle = "#AB85F5";
+                    // ctx.fillRect(
+                    //     col * CELL_SIZE,
+                    //     row * CELL_SIZE,
+                    //     CELL_SIZE,
+                    //     CELL_SIZE
+                    // );
+                    // var img = new Image();   // 创建一个<img>元素
+                    // img.onload = function(){
+                    //     ctx.drawImage(img,
+                    //         col * CELL_SIZE,
+                    //         row * CELL_SIZE,
+                    //         CELL_SIZE,
+                    //         CELL_SIZE)//绘制图片
+                    // }
+                    const tail = snakeCells[snakeCells.length - 1];
+                    const tailNext = snakeCells[snakeCells.length - 2];
+                    //todo 重要，需要整理下
+                    if((tail > tailNext && tailNext === tail - worldWidth)  //
+                            || (tail < tailNext && tail === tailNext - (worldWidth * (worldWidth - 1)))){
+                        //img.src = 'tail-up.png';
+                        drawSnapTail(col * CELL_SIZE, row * CELL_SIZE,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE, col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE + CELL_SIZE, "#AB85F5");
+                    } else if((tail < tailNext && tail === tailNext - worldWidth)
+                            || (tail > tailNext && tail - (worldWidth * (worldWidth - 1)) === tailNext)) {
+                        //img.src = 'tail-down.png';
+                        drawSnapTail(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE, col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE, "#AB85F5");
+                    } else if((tail > tailNext && tail === tailNext + 1)
+                            ||(tail < tailNext && tail + worldWidth - 1 === tailNext)) {
+                        //img.src = 'tail-left.png';
+                        drawSnapTail(col * CELL_SIZE, row * CELL_SIZE,col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE, col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, "#AB85F5");
+                    } else if((tail < tailNext && tail === tailNext - 1)
+                            ||(tail > tailNext && tail === tailNext + worldWidth - 1)) {
+                        //img.src = 'tail-right.png';
+                        drawSnapTail(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE, col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE +CELL_SIZE, "#AB85F5");
+                    } else {
+                        //alert("tail:" + tail + ", tailNext:" + tailNext);
+                        console.log("当蛇吃果实的时候，会出问题，暂时忽略");
+                    }
 
                } else { //蛇身
                     ctx.fillStyle = "#AB85F5";
@@ -158,6 +189,15 @@ init().then(wasm => {
             });
 
         ctx.stroke();
+    }
+
+    function drawSnapTail(x1: number, y1:number, x2:number, y2:number, x3:number, y3:number, color: string) {
+        ctx.moveTo(x1, y1); //三角形坐标1
+        ctx.lineTo(x2, y2); //三角形坐标1
+        ctx.lineTo(x3, y3); //三角形坐标3
+        ctx.fillStyle = color;
+        ctx.closePath();
+        ctx.fill();
     }
 
     function drawGameStatus() {
@@ -185,7 +225,7 @@ init().then(wasm => {
             drawWorld();
             //
             if(world.step()) {
-                fps =fps+5;
+                fps =fps+0; //每吃到一次奖励就提升速度
             }
             paint();
             //the method takes a callback to invoked before the next repaint

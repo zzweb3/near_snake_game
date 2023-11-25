@@ -45,11 +45,10 @@ module.exports = {
                 {from: "./images/head-right.png", to: "./" },
                 {from: "./images/head-down.png", to: "./" },
                 {from: "./images/head-left.png", to: "./" },
-                //{from: "./images/body.png", to: "./" },
-                //{from: "./images/tail-up.png", to: "./" },
-                // {from: "./images/tail-right.png", to: "./" },
-                // {from: "./images/tail-down.png", to: "./" },
-                // {from: "./images/tail-left.png", to: "./" },
+                {from: "./images/tail-down.png", to: "./" },
+                {from: "./images/tail-left.png", to: "./" },
+                {from: "./images/tail-up.png", to: "./" },
+                {from: "./images/tail-right.png", to: "./" },
             ]
         })
     ]
