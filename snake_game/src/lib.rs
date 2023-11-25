@@ -66,7 +66,7 @@ pub struct World {
 #[wasm_bindgen]
 impl World {
     pub fn new(width: usize, snake_idx: usize) -> World {
-        let snake = Snake::new(snake_idx, 3);
+        let snake = Snake::new(snake_idx, 2);
         let size = width * width;
 
         World { 
@@ -222,7 +222,7 @@ impl World {
                 // web_sys::console::log_1(&a.to_string().into());
                 // SnakeCell((snake_idx - self.width) % self.size) //第一行再向上移动呢？？？
                 let treshold = snake_idx - (row * self.width);
-                if snake_idx == treshold {
+                if snake_idx == treshold { //第一行
                     SnakeCell((self.size - self.width) + treshold)
                 } else {
                     SnakeCell(snake_idx - self.width)
@@ -230,7 +230,7 @@ impl World {
             },
             Direction::Down => {
                 let treshold = snake_idx + ((self.width - row) * self.width);
-                if snake_idx + self.width == treshold {
+                if snake_idx + self.width == treshold { //最后一行
                     SnakeCell(treshold - ((row + 1) * self.width))
                 } else {
                     SnakeCell(snake_idx + self.width)

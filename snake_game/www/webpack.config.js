@@ -37,15 +37,19 @@ module.exports = {
         new CopyWebpackPlugin({
             patterns: [
                 {from: "./index.html", to: "./"},
+                {from: "./style.css", to: "./"},
                 {from: "./images/icon.png", to: "./" },
                 {from: "./images/logo.png", to: "./" },
+                // {from: "./images/reward.png", to: "./" },
                 {from: "./images/head-up.png", to: "./" },
                 {from: "./images/head-right.png", to: "./" },
                 {from: "./images/head-down.png", to: "./" },
                 {from: "./images/head-left.png", to: "./" },
-                {from: "./images/body.png", to: "./" },
-                {from: "./images/tail.png", to: "./" },
-               // {from: "./images/gift.png", to: "./" },
+                //{from: "./images/body.png", to: "./" },
+                //{from: "./images/tail-up.png", to: "./" },
+                // {from: "./images/tail-right.png", to: "./" },
+                // {from: "./images/tail-down.png", to: "./" },
+                // {from: "./images/tail-left.png", to: "./" },
             ]
         })
     ]

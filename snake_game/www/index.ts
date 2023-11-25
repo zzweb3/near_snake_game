@@ -4,7 +4,7 @@ import { rnd } from "./utils/rnd";
 //init() 页面加载时被调用
 init().then(wasm => {
     const CELL_SIZE = 30;   //单元格大小 10个像素
-    const WORLD_WIDTH = 20;
+    const WORLD_WIDTH = 15;
     const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);   //蛇头
 
     const world = World.new(WORLD_WIDTH, snakeSpawnIdx);
@@ -75,16 +75,14 @@ init().then(wasm => {
         const row = Math.floor(idx / worldWidth);
 
         ctx.beginPath();
-        ctx.fillStyle = "#FF0000";
-        ctx.fillRect(
-            col * CELL_SIZE,
-            row * CELL_SIZE,
-            CELL_SIZE,
-            CELL_SIZE
-        );
+
+        ctx.arc(col * CELL_SIZE + CELL_SIZE/2,row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE/2.5, 0,2*Math.PI);
+        ctx.fillStyle="#FF4040";
+        ctx.fill();
+        ctx.setLineDash([]);
+        ctx.strokeStyle="#FF4040";
 
         ctx.stroke();
-
     }
 
     function drawSnake() {
@@ -138,26 +136,17 @@ init().then(wasm => {
                         img.src = 'head-left.png';
                     }
 
-               } else if (i === 0) {    //蛇尾
-                    ctx.arc(col * CELL_SIZE + CELL_SIZE/2,row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE/3,0,2*Math.PI);//arc 的意思是“弧”
-                    ctx.fillStyle="#FF7256";
-                    ctx.fill();
-                    ctx.strokeStyle="blue";
-                    // var img = new Image();
-                    // img.onload = function(){
-                    //     ctx.drawImage(img,
-                    //         col * CELL_SIZE,
-                    //         row * CELL_SIZE,
-                    //         CELL_SIZE,
-                    //         CELL_SIZE)
-                    // }
-                    // img.src = 'tail.png';
+               } else if (i === 0 ) {    //蛇尾 需要特殊处理，比较复杂，暂不考虑
+                    ctx.fillStyle = "#AB85F5";
+                    ctx.fillRect(
+                        col * CELL_SIZE,
+                        row * CELL_SIZE,
+                        CELL_SIZE,
+                        CELL_SIZE
+                    );
+
                } else { //蛇身
-                    // ctx.arc(col * CELL_SIZE + CELL_SIZE/2,row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE/2,0,2*Math.PI);//arc 的意思是“弧”
-                    // ctx.fillStyle="#FF6A6A";
-                    // ctx.fill();
-                    // ctx.strokeStyle="blue";
-                    ctx.fillStyle = "#FF6A6A";
+                    ctx.fillStyle = "#AB85F5";
                     ctx.fillRect(
                         col * CELL_SIZE,
                         row * CELL_SIZE,
