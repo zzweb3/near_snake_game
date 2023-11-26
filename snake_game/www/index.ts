@@ -5,7 +5,7 @@ import {rnd} from "./utils/rnd";
 init().then(wasm => {
 
     let counter = 30;   //游戏限时30秒
-    let fps = 5;    //初始时刻每秒5帧
+    let fps = 3;    //初始时刻每秒3帧
 
     const CELL_SIZE = 40;   //单元格大小 10个像素
     const WORLD_WIDTH = 20;
@@ -273,7 +273,7 @@ init().then(wasm => {
             drawWorld();
             //
             if(world.step()) {
-                fps =fps + 5; //每吃到一次奖励就提升速度
+                fps = fps + 3; //每吃到一次奖励就提升速度
             }
             paint();
             //the method takes a callback to invoked before the next repaint
@@ -286,20 +286,20 @@ init().then(wasm => {
         setTimeout(() => {
             leftTime.textContent = Math.floor(counter) + " ";
             const status = world.game_status();
-            if (counter <= 0 || world.game_status() != GameStatus.Played) {
+            if (counter <= 0 || status != GameStatus.Played) {
                 //修改游戏状态，使游戏停止
                 world.stop_game();
                 console.log("游戏时间到！！！游戏得分：" + status);
                 //弹框提示得分，如果超过5分提示得到nft奖励
                 if(world.points() >= 1) {
-                    var r=confirm("🎉🎉🎉 太棒了，您真是纯爷们儿！！！我们将赠送您一份NFT奖励，如果您接受请点击【确认】，如果不接受请点击【取消】");
+                    var r=confirm("时间到！！！🎉🎉🎉 太棒了，您真是纯爷们儿！！！我们将赠送您一份NFT奖励，如果您接受请点击【确认】，如果不接受请点击【取消】");
                     if (r == true){
                         alert("接收nft");
                     } else {
                         alert("不接收nft");
                     }
                 } else {
-                    alert("😭😭😭挑战失败，谢谢您的参与，是爷们儿要硬起来啊！！！");
+                    alert("😭😭😭挑战失败，谢谢您的参与，是爷们儿就要硬起来啊！！！");
                 }
                 return;
             }
