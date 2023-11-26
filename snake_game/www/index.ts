@@ -5,7 +5,7 @@ import {rnd} from "./utils/rnd";
 init().then(wasm => {
 
     let fps = 3;    //初始时刻每秒5帧
-    const CELL_SIZE = 30;   //单元格大小 10个像素
+    const CELL_SIZE = 50;   //单元格大小 10个像素
     const WORLD_WIDTH = 20;
     const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);   //蛇头
 
@@ -148,25 +148,29 @@ init().then(wasm => {
                     if((tail > tailBefore && tailBefore === tail - worldWidth)  //
                             || (tail < tailBefore && tail === tailBefore - (worldWidth * (worldWidth - 1)))){
                         //img.src = 'tail-up.png';
-                        drawSnapTail2(col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE, CELL_SIZE, Math.PI*180/180,Math.PI*0/180,"AB85F5");
+                        drawSnapTail3(col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE, CELL_SIZE/2, CELL_SIZE, Math.PI,Math.PI*0/180,Math.PI*180/180,"AB85F5");
+                        //drawSnapTail2(col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE, CELL_SIZE, Math.PI*180/180,Math.PI*0/180,"AB85F5");
                         //drawSnapTail(col * CELL_SIZE, row * CELL_SIZE,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE, col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE + CELL_SIZE, "#AB85F5");
                         beforTailDraw = Direction.Up;
                     } else if((tail < tailBefore && tail === tailBefore - worldWidth)
                             || (tail > tailBefore && tail - (worldWidth * (worldWidth - 1)) === tailBefore)) {
                         //img.src = 'tail-down.png';
-                        drawSnapTail2(col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE + CELL_SIZE, CELL_SIZE, Math.PI*0/180,Math.PI*180/180,"AB85F5");
+                        drawSnapTail3(col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE + CELL_SIZE, CELL_SIZE/2, CELL_SIZE, 0,Math.PI*0/180,Math.PI*180/180,"AB85F5");
+                        //drawSnapTail2(col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE + CELL_SIZE, CELL_SIZE, Math.PI*0/180,Math.PI*180/180,"AB85F5");
                         //drawSnapTail(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE, col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE, "#AB85F5");
                         beforTailDraw = Direction.Down;
                     } else if((tail > tailBefore && tail === tailBefore + 1)
                             ||(tail < tailBefore && tail + worldWidth - 1 === tailBefore)) {
                         //img.src = 'tail-left.png';
-                        drawSnapTail2(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*90/180,Math.PI*270/180,"AB85F5");
+                        drawSnapTail3(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE/2, CELL_SIZE, Math.PI/2,Math.PI*90/180,Math.PI*180/180,"AB85F5");
+                        //drawSnapTail2(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*90/180,Math.PI*270/180,"AB85F5");
                         //drawSnapTail(col * CELL_SIZE, row * CELL_SIZE,col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE, col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, "#AB85F5");
                         beforTailDraw = Direction.Left;
                     } else if((tail < tailBefore && tail === tailBefore - 1)
                             ||(tail > tailBefore && tail === tailBefore + worldWidth - 1)) {
                         //img.src = 'tail-right.png';
-                        drawSnapTail2(col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*270/180,Math.PI*90/180,"AB85F5");
+                        drawSnapTail3(col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE/2, CELL_SIZE, Math.PI/2, Math.PI*180/180,Math.PI*270/180,"AB85F5");
+                        //drawSnapTail2(col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*270/180,Math.PI*90/180,"AB85F5");
                        // drawSnapTail(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE, col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE +CELL_SIZE, "#AB85F5");
                         beforTailDraw = Direction.Right;
                     } else {
@@ -174,19 +178,23 @@ init().then(wasm => {
                         if(tail == tailBefore) {
                             switch(beforTailDraw){
                                 case Direction.Up:
-                                    drawSnapTail2(beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE, CELL_SIZE, Math.PI*180/180,Math.PI*0/180,"AB85F5");
+                                    drawSnapTail3(beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE, CELL_SIZE/2, CELL_SIZE, Math.PI,Math.PI*0/180,Math.PI*180/180,"AB85F5");
+                                    //drawSnapTail2(beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE, CELL_SIZE, Math.PI*180/180,Math.PI*0/180,"AB85F5");
                                     //drawSnapTail(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE,beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE, beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE + CELL_SIZE, "#AB85F5");
                                     break;
                                 case Direction.Down:
-                                    drawSnapTail2(beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE + CELL_SIZE, CELL_SIZE, Math.PI*0/180,Math.PI*180/180,"AB85F5");
+                                    drawSnapTail3(beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE + CELL_SIZE, CELL_SIZE/2, CELL_SIZE, 0,Math.PI*0/180,Math.PI*180/180,"AB85F5");
+                                    //drawSnapTail2(beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE + CELL_SIZE, CELL_SIZE, Math.PI*0/180,Math.PI*180/180,"AB85F5");
                                     //drawSnapTail(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE,beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE, beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE, "#AB85F5");
                                     break;
                                 case Direction.Left:
-                                    drawSnapTail2(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*90/180,Math.PI*270/180,"AB85F5");
+                                    drawSnapTail3(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2, CELL_SIZE/2, CELL_SIZE, Math.PI/2,Math.PI*90/180,Math.PI*180/180,"AB85F5");
+                                    //drawSnapTail2(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*90/180,Math.PI*270/180,"AB85F5");
                                     //drawSnapTail(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE,beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE, beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2, "#AB85F5");
                                     break;
                                 case Direction.Right:
-                                    drawSnapTail2(beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*270/180,Math.PI*90/180,"AB85F5");
+                                    drawSnapTail3(beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2, CELL_SIZE/2, CELL_SIZE, Math.PI/2, Math.PI*180/180,Math.PI*270/180,"AB85F5");
+                                    //drawSnapTail2(beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*270/180,Math.PI*90/180,"AB85F5");
                                     //drawSnapTail(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2,beforTailCol * CELL_SIZE + CELL_SIZE, row * CELL_SIZE, beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE +CELL_SIZE, "#AB85F5");
                                     break;
                             }
@@ -219,8 +227,17 @@ init().then(wasm => {
     }
 
     function drawSnapTail2(x1: number, y1:number, r:number, s:number, e:number, color:string) {
-        //半圆形蛇尾
+        //半圆形蛇尾 https://www.jb51.net/javascript/2964307fs.htm
         ctx.arc(x1, y1,r/2, s, e,true); //逆时针
+        ctx.fillStyle = color;
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    function drawSnapTail3(x:number, y:number, radiusX:number, radiusY:number, rotation:number, startAngle:number, endAngle:number, color: string) {
+        //半椭圆蛇尾 https://www.jb51.net/javascript/2964307fs.htm
+       // ctx.ellipse(425,400,25,50,0,0, Math.PI, false);
+        ctx.ellipse(x,y,radiusX,radiusY,rotation,startAngle, endAngle, true);
         ctx.fillStyle = color;
         ctx.closePath();
         ctx.fill();
