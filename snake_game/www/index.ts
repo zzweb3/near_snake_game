@@ -8,7 +8,7 @@ init().then(wasm => {
     let fps = 3;    //初始时刻每秒3帧
 
     const CELL_SIZE = 40;   //单元格大小 10个像素
-    const WORLD_WIDTH = 20;
+    const WORLD_WIDTH = 13;
     const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);   //蛇头
 
     const world = World.new(WORLD_WIDTH, snakeSpawnIdx);
