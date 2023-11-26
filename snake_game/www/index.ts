@@ -4,8 +4,10 @@ import {rnd} from "./utils/rnd";
 //init() 页面加载时被调用
 init().then(wasm => {
 
-    let fps = 3;    //初始时刻每秒5帧
-    const CELL_SIZE = 50;   //单元格大小 10个像素
+    let counter = 30;   //游戏限时30秒
+    let fps = 5;    //初始时刻每秒5帧
+
+    const CELL_SIZE = 40;   //单元格大小 10个像素
     const WORLD_WIDTH = 20;
     const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);   //蛇头
 
@@ -15,6 +17,8 @@ init().then(wasm => {
     const points = document.getElementById("points");
     const gameStatus = document.getElementById("game-status");
     const gameControlBtn = document.getElementById("game-control-btn");
+
+    const leftTime = document.getElementById("leftTime");
 
     const canvas = <HTMLCanvasElement> document.getElementById("snake-canvas");
     const ctx = canvas.getContext("2d");
@@ -33,6 +37,7 @@ init().then(wasm => {
             gameControlBtn.textContent = "Playing...";
             world.start_game();
             play();
+            timingChallenge();
         } else {
             location.reload();
         }
@@ -261,20 +266,42 @@ init().then(wasm => {
             gameControlBtn.textContent = "Re-Play";
             return;
         }
-
+        //游戏渲染
         setTimeout(() => {
+            if(world.game_status() != GameStatus.Played) {
+                return;
+            }
             //清除画布
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawWorld();
             //
             if(world.step()) {
-                fps =fps + 1; //每吃到一次奖励就提升速度
+                fps =fps + 5; //每吃到一次奖励就提升速度
             }
             paint();
             //the method takes a callback to invoked before the next repaint
-            requestAnimationFrame(play)
+            requestAnimationFrame(play);
         }, 1000 / fps);
     }
+
+    //30秒限时挑战
+    function timingChallenge() {
+        setTimeout(() => {
+            leftTime.textContent = Math.floor(counter) + " ";
+
+            if (counter <= 0 || world.game_status() == GameStatus.Lost) {
+                //修改游戏状态，使游戏停止
+                world.stop_game();
+                console.log("游戏时间到！！！游戏得分：" + world.points().toString());
+                //弹框提示得分，并提示是否得到nft奖励
+                
+                return;
+            }
+            counter--;
+            requestAnimationFrame(timingChallenge);
+        }, 1000);
+    }
+
 
     paint();
 }) 

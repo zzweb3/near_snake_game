@@ -26,6 +26,7 @@ pub enum GameStatus {
     Won,
     Lost,
     Played,
+    Stoped,
 }
 
 #[derive(PartialEq, Clone, Copy)]
@@ -112,6 +113,10 @@ impl World {
         self.status = Some(GameStatus::Played)
     }
 
+    pub fn stop_game(&mut self) {
+        self.status = Some(GameStatus::Stoped)
+    }
+
     pub fn game_status(&self) -> Option<GameStatus>{
         self.status
     }
@@ -121,6 +126,7 @@ impl World {
             Some(GameStatus::Won) => String::from("You have won!"),
             Some(GameStatus::Lost) => String::from("You have lost!"),
             Some(GameStatus::Played) => String::from("Playing"),
+            Some(GameStatus::Stoped) => String::from("Stoped"),
             None => String::from("No Status"),
         }
     }
