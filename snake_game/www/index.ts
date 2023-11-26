@@ -1,11 +1,12 @@
-import init, { World, Direction, GameStatus } from "snake_game";    //从pkg中导入
-import { rnd } from "./utils/rnd";
+import init, {Direction, GameStatus, World} from "snake_game"; //从pkg中导入
+import {rnd} from "./utils/rnd";
 
 //init() 页面加载时被调用
 init().then(wasm => {
-    let fps = 5;    //初始时刻每秒5帧
+
+    let fps = 3;    //初始时刻每秒5帧
     const CELL_SIZE = 30;   //单元格大小 10个像素
-    const WORLD_WIDTH = 10;
+    const WORLD_WIDTH = 20;
     const snakeSpawnIdx = rnd(WORLD_WIDTH * WORLD_WIDTH);   //蛇头
 
     const world = World.new(WORLD_WIDTH, snakeSpawnIdx);
@@ -14,12 +15,17 @@ init().then(wasm => {
     const points = document.getElementById("points");
     const gameStatus = document.getElementById("game-status");
     const gameControlBtn = document.getElementById("game-control-btn");
-    
+
     const canvas = <HTMLCanvasElement> document.getElementById("snake-canvas");
     const ctx = canvas.getContext("2d");
 
     canvas.height = worldWidth * CELL_SIZE;
     canvas.width = worldWidth * CELL_SIZE;
+
+    //记录上一次蛇尾的位置
+    let beforTailCol:number;
+    let beforTailRow:number;
+    let beforTailDraw: Direction;
 
     gameControlBtn.addEventListener("click", _ => {
         const status = world.game_status();
@@ -92,29 +98,27 @@ init().then(wasm => {
             world.snake_cells(),
             world.snake_length(),
         );
-        console.log(snakeCells);
+        //console.log(snakeCells);
+        const status = world.game_status();
 
         snakeCells
-            //.slice()
-            .filter((cellIdx, i) => !(i > 0 && cellIdx === snakeCells[0]))    //filter out duplicates 过滤重复项
+            .slice()
+            //.filter((cellIdx, i) => !(i > 0 && cellIdx === snakeCells[0]))    //filter out duplicates 过滤重复项
             //.reverse()  //revers array 反转数组
             .forEach((cellIdx, i) => {
                 //(x, y) 即 (col, row)
                 const col = cellIdx % worldWidth;
                 const row = Math.floor(cellIdx / worldWidth);
+                if (beforTailCol === undefined){
+                    beforTailCol = col;
+                }
+                if(beforTailRow === undefined) {
+                    beforTailRow = row;
+                }
 
                 ctx.beginPath();
-                //we are overriding snake head color by body when we crush
-                // ctx.fillStyle = i === snakeCells.length - 1 ? "#7878db" : "#363636";
-                // ctx.fillRect(
-                //     col * CELL_SIZE,
-                //     row * CELL_SIZE,
-                //     CELL_SIZE,
-                //     CELL_SIZE
-                // );
 
                 //绘制蛇图，蛇头，蛇身，蛇尾
-                //if (i === snakeCells.length - 1) {  //蛇头-反转
                 if (i === 0) {  //蛇头
                     var img = new Image();   // 创建一个<img>元素
                     img.onload = function(){
@@ -136,47 +140,61 @@ init().then(wasm => {
                         img.src = 'head-left.png';
                     }
 
-               //} else if (i === 0 ) {    //蛇尾 需要特殊处理，比较复杂，暂不考虑
-                } else if (i === snakeCells.length - 1) {    //蛇尾 需要特殊处理，比较复杂，暂不考虑
-                    // ctx.fillStyle = "#AB85F5";
-                    // ctx.fillRect(
-                    //     col * CELL_SIZE,
-                    //     row * CELL_SIZE,
-                    //     CELL_SIZE,
-                    //     CELL_SIZE
-                    // );
-                    // var img = new Image();   // 创建一个<img>元素
-                    // img.onload = function(){
-                    //     ctx.drawImage(img,
-                    //         col * CELL_SIZE,
-                    //         row * CELL_SIZE,
-                    //         CELL_SIZE,
-                    //         CELL_SIZE)//绘制图片
-                    // }
+                } else if (i === snakeCells.length - 1) {
+                    //TODO 原理
                     const tail = snakeCells[snakeCells.length - 1];
-                    const tailNext = snakeCells[snakeCells.length - 2];
-                    //todo 重要，需要整理下
-                    if((tail > tailNext && tailNext === tail - worldWidth)  //
-                            || (tail < tailNext && tail === tailNext - (worldWidth * (worldWidth - 1)))){
+                    const tailBefore = snakeCells[snakeCells.length - 2];
+                    //
+                    if((tail > tailBefore && tailBefore === tail - worldWidth)  //
+                            || (tail < tailBefore && tail === tailBefore - (worldWidth * (worldWidth - 1)))){
                         //img.src = 'tail-up.png';
-                        drawSnapTail(col * CELL_SIZE, row * CELL_SIZE,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE, col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE + CELL_SIZE, "#AB85F5");
-                    } else if((tail < tailNext && tail === tailNext - worldWidth)
-                            || (tail > tailNext && tail - (worldWidth * (worldWidth - 1)) === tailNext)) {
+                        drawSnapTail2(col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE, CELL_SIZE, Math.PI*180/180,Math.PI*0/180,"AB85F5");
+                        //drawSnapTail(col * CELL_SIZE, row * CELL_SIZE,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE, col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE + CELL_SIZE, "#AB85F5");
+                        beforTailDraw = Direction.Up;
+                    } else if((tail < tailBefore && tail === tailBefore - worldWidth)
+                            || (tail > tailBefore && tail - (worldWidth * (worldWidth - 1)) === tailBefore)) {
                         //img.src = 'tail-down.png';
-                        drawSnapTail(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE, col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE, "#AB85F5");
-                    } else if((tail > tailNext && tail === tailNext + 1)
-                            ||(tail < tailNext && tail + worldWidth - 1 === tailNext)) {
+                        drawSnapTail2(col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE + CELL_SIZE, CELL_SIZE, Math.PI*0/180,Math.PI*180/180,"AB85F5");
+                        //drawSnapTail(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE, col * CELL_SIZE + CELL_SIZE/2, row * CELL_SIZE, "#AB85F5");
+                        beforTailDraw = Direction.Down;
+                    } else if((tail > tailBefore && tail === tailBefore + 1)
+                            ||(tail < tailBefore && tail + worldWidth - 1 === tailBefore)) {
                         //img.src = 'tail-left.png';
-                        drawSnapTail(col * CELL_SIZE, row * CELL_SIZE,col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE, col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, "#AB85F5");
-                    } else if((tail < tailNext && tail === tailNext - 1)
-                            ||(tail > tailNext && tail === tailNext + worldWidth - 1)) {
+                        drawSnapTail2(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*90/180,Math.PI*270/180,"AB85F5");
+                        //drawSnapTail(col * CELL_SIZE, row * CELL_SIZE,col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE, col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, "#AB85F5");
+                        beforTailDraw = Direction.Left;
+                    } else if((tail < tailBefore && tail === tailBefore - 1)
+                            ||(tail > tailBefore && tail === tailBefore + worldWidth - 1)) {
                         //img.src = 'tail-right.png';
-                        drawSnapTail(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE, col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE +CELL_SIZE, "#AB85F5");
+                        drawSnapTail2(col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*270/180,Math.PI*90/180,"AB85F5");
+                       // drawSnapTail(col * CELL_SIZE, row * CELL_SIZE + CELL_SIZE/2,col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE, col * CELL_SIZE + CELL_SIZE, row * CELL_SIZE +CELL_SIZE, "#AB85F5");
+                        beforTailDraw = Direction.Right;
                     } else {
-                        //alert("tail:" + tail + ", tailNext:" + tailNext);
-                        console.log("当蛇吃果实的时候，会出问题，暂时忽略");
+                        console.log("蛇吃果实了");
+                        if(tail == tailBefore) {
+                            switch(beforTailDraw){
+                                case Direction.Up:
+                                    drawSnapTail2(beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE, CELL_SIZE, Math.PI*180/180,Math.PI*0/180,"AB85F5");
+                                    //drawSnapTail(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE,beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE, beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE + CELL_SIZE, "#AB85F5");
+                                    break;
+                                case Direction.Down:
+                                    drawSnapTail2(beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE + CELL_SIZE, CELL_SIZE, Math.PI*0/180,Math.PI*180/180,"AB85F5");
+                                    //drawSnapTail(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE,beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE, beforTailCol * CELL_SIZE + CELL_SIZE/2, beforTailRow * CELL_SIZE, "#AB85F5");
+                                    break;
+                                case Direction.Left:
+                                    drawSnapTail2(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*90/180,Math.PI*270/180,"AB85F5");
+                                    //drawSnapTail(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE,beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE, beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2, "#AB85F5");
+                                    break;
+                                case Direction.Right:
+                                    drawSnapTail2(beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2, CELL_SIZE, Math.PI*270/180,Math.PI*90/180,"AB85F5");
+                                    //drawSnapTail(beforTailCol * CELL_SIZE, beforTailRow * CELL_SIZE + CELL_SIZE/2,beforTailCol * CELL_SIZE + CELL_SIZE, row * CELL_SIZE, beforTailCol * CELL_SIZE + CELL_SIZE, beforTailRow * CELL_SIZE +CELL_SIZE, "#AB85F5");
+                                    break;
+                            }
+                        }
                     }
-
+                    //记录上一次蛇尾的位置
+                    beforTailCol = col;
+                    beforTailRow = row;
                } else { //蛇身
                     ctx.fillStyle = "#AB85F5";
                     ctx.fillRect(
@@ -187,14 +205,22 @@ init().then(wasm => {
                     );
                 }
             });
-
         ctx.stroke();
     }
 
     function drawSnapTail(x1: number, y1:number, x2:number, y2:number, x3:number, y3:number, color: string) {
+        //三角形蛇尾
         ctx.moveTo(x1, y1); //三角形坐标1
         ctx.lineTo(x2, y2); //三角形坐标1
         ctx.lineTo(x3, y3); //三角形坐标3
+        ctx.fillStyle = color;
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    function drawSnapTail2(x1: number, y1:number, r:number, s:number, e:number, color:string) {
+        //半圆形蛇尾
+        ctx.arc(x1, y1,r/2, s, e,true); //逆时针
         ctx.fillStyle = color;
         ctx.closePath();
         ctx.fill();
@@ -225,12 +251,12 @@ init().then(wasm => {
             drawWorld();
             //
             if(world.step()) {
-                fps =fps+0; //每吃到一次奖励就提升速度
+                fps =fps + 1; //每吃到一次奖励就提升速度
             }
             paint();
             //the method takes a callback to invoked before the next repaint
             requestAnimationFrame(play)
-        }, 1000 / fps)
+        }, 1000 / fps);
     }
 
     paint();

@@ -66,7 +66,6 @@ impl World {
     pub fn new(width: usize, snake_idx: usize) -> World {
         let snake = Snake::new(snake_idx, 3);
         let size = width * width;
-
         World { 
             width,
             size,
@@ -172,7 +171,7 @@ impl World {
                 for i in 1..self.snake_length() {
                     self.snake.body[i] = SnakeCell(temp[i - 1].0);
                 }
-                //蛇体包含蛇头，即蛇头撞上了蛇的身体
+                //todo 蛇体包含蛇头，即蛇头撞上了蛇的身体
                 if self.snake.body[1..self.snake_length()].contains(&self.snake.body[0]) {
                     self.status = Some(GameStatus::Lost);
                 }
@@ -185,14 +184,14 @@ impl World {
                         self.reward_cell = None;
                         self.status = Some(GameStatus::Won);
                     }
-
-                    self.snake.body.push(SnakeCell(self.snake.body[1].0));  //push蛇头后面第一个节点
+                    //self.snake.body.push(SnakeCell(self.snake.body[1].0));  //push蛇头后面第一个节点
+                    self.snake.body.insert(1, SnakeCell(self.snake.body[1].0)); //push蛇头后面第一个节点插入到Vec第二个元素位置
                     return Some(true);  //返回true，蛇没吃到一次奖励，就返回true，通知前端提速。
                 }
                return None;
             },
             _ => {
-                return None;
+               return None;
             }
         }
     }
@@ -240,6 +239,5 @@ impl World {
             },
         };
     }
-
 }
 //wasm-pack build --target web
