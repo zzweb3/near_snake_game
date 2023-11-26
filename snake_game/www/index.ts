@@ -262,15 +262,12 @@ init().then(wasm => {
 
     function play() {
         const status = world.game_status();
-        if(status == GameStatus.Won || status == GameStatus.Lost) {
+        if(status == GameStatus.Won || status == GameStatus.Lost || status == GameStatus.Stoped) {
             gameControlBtn.textContent = "Re-Play";
             return;
         }
         //游戏渲染
         setTimeout(() => {
-            if(world.game_status() != GameStatus.Played) {
-                return;
-            }
             //清除画布
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawWorld();
@@ -288,13 +285,22 @@ init().then(wasm => {
     function timingChallenge() {
         setTimeout(() => {
             leftTime.textContent = Math.floor(counter) + " ";
-
-            if (counter <= 0 || world.game_status() == GameStatus.Lost) {
+            const status = world.game_status();
+            if (counter <= 0 || world.game_status() != GameStatus.Played) {
                 //修改游戏状态，使游戏停止
                 world.stop_game();
-                console.log("游戏时间到！！！游戏得分：" + world.points().toString());
-                //弹框提示得分，并提示是否得到nft奖励
-                
+                console.log("游戏时间到！！！游戏得分：" + status);
+                //弹框提示得分，如果超过5分提示得到nft奖励
+                if(world.points() >= 1) {
+                    var r=confirm("🎉🎉🎉 太棒了，您真是纯爷们儿！！！我们将赠送您一份NFT奖励，如果您接受请点击【确认】，如果不接受请点击【取消】");
+                    if (r == true){
+                        alert("接收nft");
+                    } else {
+                        alert("不接收nft");
+                    }
+                } else {
+                    alert("😭😭😭挑战失败，谢谢您的参与，是爷们儿要硬起来啊！！！");
+                }
                 return;
             }
             counter--;
