@@ -314,7 +314,7 @@ init().then(wasm => {
         label_var.innerHTML = "&nbsp;时间到！！！&nbsp;";
         popBox.appendChild(label_var);
         popBox.appendChild(document.createElement("br"));
-        var textNode1 = document.createTextNode("🎉🎉🎉 太棒了，您真是真男人！！！我们将赠送您一份NFT奖励呦~");
+        var textNode1 = document.createTextNode("🎉🎉🎉 太棒了，您是真男人！！！我们将赠送您一份NFT奖励呦~");
         popBox.appendChild(textNode1);
     }
 
