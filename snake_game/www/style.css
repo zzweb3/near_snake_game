@@ -43,6 +43,21 @@
     transition-duration: 0.4s;
 }
 
+.button-disabled {
+    background-color: lightgray;
+    border: none;
+    color: white;
+    padding: 10px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
 .button1 {
     box-shadow: 0 8px 10px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
@@ -56,4 +71,31 @@
     font-size:3.0em;
     color: coral;
     font-family: "Lucida Calligraphy", cursive, serif, sans-serif;
+}
+
+/*弹出层*/
+#popBox {
+    display: none;
+    background-color: #FFFFFF;
+    z-index: 11;
+    width: 400px;
+    height: 300px;
+    position:fixed;
+    top:100px;
+    right:0;
+    left:0;
+    bottom:0;
+    margin:auto;
+}
+
+#popBox .close{
+    text-align: right;
+    margin-right: 5px;
+    background-color: #F8F8F8;
+}
+
+/*关闭按钮*/
+#popBox .close a {
+    text-decoration: none;
+    color: #2D2C3B;
 }

@@ -4,7 +4,7 @@ import {rnd} from "./utils/rnd";
 //init() 页面加载时被调用
 init().then(wasm => {
 
-    let counter = 30;   //游戏限时30秒
+    let counter = 5;   //游戏限时30秒
     let fps = 3;    //初始时刻每秒3帧
 
     const CELL_SIZE = 40;   //单元格大小 10个像素
@@ -16,7 +16,7 @@ init().then(wasm => {
 
     const points = document.getElementById("points");
     const gameStatus = document.getElementById("game-status");
-    const gameControlBtn = document.getElementById("game-control-btn");
+    const gameControlBtn = <HTMLButtonElement> document.getElementById("game-control-btn");
 
     const leftTime = document.getElementById("leftTime");
 
@@ -292,14 +292,9 @@ init().then(wasm => {
                 console.log("游戏时间到！！！游戏得分：" + status);
                 //弹框提示得分，如果超过5分提示得到nft奖励
                 if(world.points() >= 1) {
-                    var r=confirm("时间到！！！🎉🎉🎉 太棒了，您真是纯爷们儿！！！我们将赠送您一份NFT奖励，如果您接受请点击【确认】，如果不接受请点击【取消】");
-                    if (r == true){
-                        alert("接收nft");
-                    } else {
-                        alert("不接收nft");
-                    }
+                    popBox();
                 } else {
-                    alert("😭😭😭挑战失败，谢谢您的参与，是爷们儿就要硬起来啊！！！");
+                    popBoxfail();
                 }
                 return;
             }
@@ -308,6 +303,44 @@ init().then(wasm => {
         }, 1000);
     }
 
+    function popBox() {
+        gameControlBtn.disabled = true;
+        gameControlBtn.className = "button-disabled";
+        //
+        const popBox = <HTMLDivElement> document.getElementById("popBox");
+        popBox.style.display = "block";
+        var label_var = document.createElement("label");
+        label_var.setAttribute("style", "font-family:font-family:Arial !important; vertical-align:middle; font-size:50px; color:red")
+        label_var.innerHTML = "&nbsp;时间到！！！&nbsp;";
+        popBox.appendChild(label_var);
+        popBox.appendChild(document.createElement("br"));
+        var textNode1 = document.createTextNode("🎉🎉🎉 太棒了，您真是真男人！！！我们将赠送您一份NFT奖励呦~");
+        popBox.appendChild(textNode1);
+    }
+
+    function popBoxfail() {
+        gameControlBtn.disabled = true;
+        gameControlBtn.className = "button-disabled";
+        //
+        const popBox = <HTMLDivElement> document.getElementById("popBox");
+        popBox.style.display = "block";
+        var label_var = document.createElement("label");
+        label_var.setAttribute("style", "font-family:font-family:Arial !important; vertical-align:middle; font-size:50px; color:red")
+        label_var.innerHTML = "&nbsp;时间到！！！&nbsp;";
+        popBox.appendChild(label_var);
+        popBox.appendChild(document.createElement("br"));
+        var textNode1 = document.createTextNode("😭😭😭挑战失败，谢谢您的参与，是男人就再接再厉～");
+        popBox.appendChild(textNode1);
+    }
+
+    //todo ???
+    function closeBox() {
+        const popBox = <HTMLDivElement> document.getElementById("popBox");
+        popBox.style.display = "none";
+        //
+        gameControlBtn.disabled = false;
+        gameControlBtn.className = "button button2";
+    }
 
     paint();
-}) 
+})

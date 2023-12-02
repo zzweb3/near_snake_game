@@ -13,4 +13,4 @@ import './images/head-up.png';
 import './images/head-right.png';
 import './images/head-down.png';
 import './images/head-left.png';
-import './images/body.png';
+//import './images/body.png';

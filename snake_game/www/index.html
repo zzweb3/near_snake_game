@@ -6,7 +6,7 @@
         <title>是男人就坚持30秒-Rust Webasemmbly Snape-Game</title>
     </head>
     <body>
-        <div class="content-wrapper">
+        <div class="content-wrapper" id="popLayer">
 <!--            <h1 class="h-css">【挑战赛】是男人就坚持30秒!!!</h1>-->
             <img src="./icon.png" height="70px" width="600px"/>
             <hr>
@@ -59,6 +59,7 @@
             <div class="div-canvas">
                 <canvas id="snake-canvas"></canvas>
             </div>
+
             <div class="flex">
                 <br>
                 <label style="color: indianred; font-size:smaller">
@@ -66,7 +67,22 @@
                 </label>
             </div>
         </div>
+        <div id="popBox">
+            <div class="close">
+                <a href="javascript:void(0)" onclick="closeBox()">关闭</a>
+            </div>
+        </div>
         <script src="./bootstrap.js"></script>
         <link href="style.css" rel="stylesheet" type="text/css"/>
     </body>
+    <script type="text/javascript">
+        function closeBox() {
+            //TODO: 如何改成typescript？？？
+            const popBox = document.getElementById("popBox");
+            popBox.style.display = "none";
+            const gameControlBtn = document.getElementById("game-control-btn");
+            gameControlBtn.disabled = false;
+            gameControlBtn.className = "button button2";
+        }
+    </script>
 </html>
